@@ -3,11 +3,12 @@ import logo from "./icons/logo.svg";
 import clock from "./icons/clock.svg";
 import eye from "./icons/eye.svg";
 import webcam from "./icons/webcam.svg";
+import Check from "../components/Check";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <header className="flex w-full justify-between pt-4 pb-2 px-14 bg-[#FFFFFF]">
+      <header className="flex w-full justify-between pt-4 pb-2 px-14 bg-[#FFFFFF] shadow-[3px_5px_20px_10px_#0000000A]">
         <div className="flex">
           {/* <div> */}
           <Image
@@ -53,7 +54,7 @@ export default function Home() {
           />
         </div>
       </header>
-      <div className="max-w-[832px] mt-4 pl-12 pr-16 pt-9 pb-10">
+      <div className="max-w-[832px] mt-6 pl-12 pr-16 pt-9 pb-10 shadow-[3px_5px_20px_10px_#0000000A] rounded-[20px]">
         <h2 className="font-medium leading-6 text-xl mb-2">System check</h2>
         <p className="font-normal leading-5 text-sm tracking-[.24px] mb-[30px] text-[#4A4A68]">
           We utilize your camera image to ensure fairness for all participants,
@@ -67,21 +68,17 @@ export default function Home() {
           can initiate a 5-second recording of yourself by clicking the button
           below.
         </p>
-        <div className="mb-10">
-          <div className="bg-[#F5F3FF] w-[91px] h=[71px] rounded-[10px] px-6 pt-[9px] pb-[12px] relative">
-            <div className="bg-[#755AE2] w-4 h-4 rounded-[30px] absolute top-[2px] right-[3px]"></div>
-            <Image
-              // className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-              src={webcam}
-              alt="Webcam"
-              className="m-auto mb-1"
-              // width={180}
-              // height={37}
-              // priority
-            />
-            <div className="font-normal leading-3 text-[10px] tracking-[.24px]">Webcam</div>
+        <div className="mb-10 flex">
+          <div className="grid grid-cols-2 place-items-center ml-11">
+            <Check icon={webcam} label={"Webcam"} />
+            <Check icon={webcam} label={"Internet Speed"} />
+            <Check icon={webcam} label={"Gadget mic"} />
+            <Check icon={webcam} label={"Lighting"} />
           </div>
         </div>
+        <button className="bg-[#755AE2] text-sm font-medium text-white py-[13px] px-[17px] rounded-[7px]">
+          Take picture and continue
+        </button>
       </div>
     </main>
   );
