@@ -3,6 +3,7 @@ import logo from "./icons/logo.svg";
 import clock from "./icons/clock.svg";
 import eye from "./icons/eye.svg";
 import webcam from "./icons/webcam.svg";
+import ObjectDetection from "../components/ObjectDetection";
 import Check from "../components/Check";
 
 export default function Home() {
@@ -69,6 +70,7 @@ export default function Home() {
           below.
         </p>
         <div className="mb-10 flex">
+          <ObjectDetection />
           <div className="grid grid-cols-2 place-items-center ml-11">
             <Check icon={webcam} label={"Webcam"} />
             <Check icon={webcam} label={"Internet Speed"} />
