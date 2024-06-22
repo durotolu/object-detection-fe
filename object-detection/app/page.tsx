@@ -3,6 +3,8 @@ import logo from "./icons/logo.svg";
 import clock from "./icons/clock.svg";
 import eye from "./icons/eye.svg";
 import webcam from "./icons/webcam.svg";
+import internet from "./icons/internet.svg";
+import lighting from "./icons/lighting.svg";
 import ObjectDetection from "../components/ObjectDetection";
 import Check from "../components/Check";
 
@@ -73,9 +75,9 @@ export default function Home() {
           <ObjectDetection />
           <div className="grid grid-cols-2 place-items-center ml-11">
             <Check icon={webcam} label={"Webcam"} />
-            <Check icon={webcam} label={"Internet Speed"} />
+            <Check icon={internet} label={"Internet Speed"} />
             <Check icon={webcam} label={"Gadget mic"} />
-            <Check icon={webcam} label={"Lighting"} />
+            <Check icon={lighting} label={"Lighting"} />
           </div>
         </div>
         <button className="bg-[#755AE2] text-sm font-medium text-white py-[13px] px-[17px] rounded-[7px]">
