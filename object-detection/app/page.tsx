@@ -1,70 +1,98 @@
-import Image from "next/image";
-import logo from "./icons/logo.svg";
-import clock from "./icons/clock.svg";
-import eye from "./icons/eye.svg";
-import webcam from "./icons/webcam.svg";
-import internet from "./icons/internet.svg";
-import lighting from "./icons/lighting.svg";
+"use client";
+
+import webcam from "../icons/webcam.svg";
+import mic from "../icons/mic.svg";
+import bulb from "../icons/bulb.svg";
+import wifi from "../icons/wifi.svg";
+import webcam_small from "../icons/webcam-small.svg";
+import wifi_bad from "../icons/wifi-bad.svg";
+import internet from "../icons/internet.svg";
+import lighting from "../icons/lighting.svg";
 import ObjectDetection from "../components/ObjectDetection";
+import checkmark from "../icons/checkmark.svg";
+import alert from "../icons/alert.svg";
 import Check from "../components/Check";
+import getNetworkDownloadSpeed from "@/utils/internet-speed";
+import { useEffect, useState } from "react";
+import Modal from "@/components/Modal";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Description from "@/components/Description";
 
 export default function Home() {
+  const [proceed, setProceed] = useState<boolean>(false);
+  const [internetState, setInternetState] = useState<boolean | null>(null);
+  const [isWebcamActive, setIsWebcamActive] = useState<boolean>(false);
+  const [isAudioActive, setIsAudioActive] = useState<boolean>(false);
+
+  const isDisabled = !internetState || !isAudioActive || !isWebcamActive
+
+  useEffect(() => {
+    getNetworkDownloadSpeed
+      .then((res) => {
+        console.log(res);
+        if (parseInt(res.mbps) > 3) setInternetState(true);
+        else setInternetState(false);
+      })
+      .catch(() => setInternetState(null));
+  }, [internetState]);
+
+  useEffect(() => {
+    (async () => {
+      const video = await navigator.mediaDevices.getUserMedia({ video: true });
+      setIsWebcamActive(video.active);
+      const audio = await navigator.mediaDevices.getUserMedia({ audio: true });
+      navigator.userActivation;
+      setIsAudioActive(audio.active);
+    })();
+  }, [isWebcamActive, isAudioActive]);
+
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <header className="flex w-full justify-between pt-4 pb-2 px-14 bg-[#FFFFFF] shadow-[3px_5px_20px_10px_#0000000A]">
-        <div className="flex">
-          <Image src={logo} alt="Logo" />
-          <div className="ml-3 m-auto">
-            <h1 className="font-dm-sans text-[20px] font-medium leading-[26.04px] tracking-[-0.24px] text-left">
-              Frontend developer
-            </h1>
-            <span className="font-dm-sans text-[14px] font-normal leading-[18.23px] tracking-[-0.24px] text-left text-[#8C8CA1]">
-              Skill assessment test
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center">
-          <div className="rounded-lg bg-[#ECE8FF] flex p-3 items-center text-[#755AE2] font-['DM_Sans']">
-            <Image
-              className="mr-[10px]"
-              src={clock}
-              alt="Clock"
-              width={24}
-              height={24}
-            />
-            <time className="mr-[4px] font-bold text-lg leading-6">29:10</time>
-            <span className="font-medium text-sm leading-3">time left</span>
-          </div>
-          <Image src={eye} alt="Check" className="ml-[10px]" />
-        </div>
-      </header>
+      <Header />
       <div className="max-w-[832px] mt-6 pl-12 pr-16 pt-9 pb-10 shadow-[3px_5px_20px_10px_#0000000A] rounded-[20px]">
-        <h2 className="font-medium leading-6 text-xl mb-2">System check</h2>
-        <p className="font-normal leading-5 text-sm tracking-[.24px] mb-[30px] text-[#4A4A68]">
-          We utilize your camera image to ensure fairness for all participants,
-          and we also employ both your camera and microphone for a video
-          questions where you will be prompted to record a response using your
-          camera or webcam, so it's essential to verify that your camera and
-          microphone are functioning correctly and that you have a stable
-          internet connection. To do this, please position yourself in front of
-          your camera, ensuring that your entire face is clearly visible on the
-          screen. This includes your forehead, eyes, ears, nose, and lips. You
-          can initiate a 5-second recording of yourself by clicking the button
-          below.
-        </p>
+        <Description />
         <div className="mb-10 flex">
           <ObjectDetection />
           <div className="grid grid-cols-2 place-items-center ml-11">
-            <Check icon={webcam} label={"Webcam"} />
-            <Check icon={internet} label={"Internet Speed"} />
-            <Check icon={webcam} label={"Gadget mic"} />
-            <Check icon={lighting} label={"Lighting"} />
+            <Check
+              icon={isWebcamActive ? checkmark : webcam}
+              label={"Webcam"}
+              iconTop={isWebcamActive && webcam_small}
+              labelTop={"Webcam small"}
+            />
+            <Check
+              icon={
+                internetState === false ? alert : internetState ? checkmark : internet
+              }
+              label={"Internet Speed"}
+              iconTop={(internetState === false) ? wifi_bad : internetState ? wifi : null}
+              labelTop={"Wifi"}
+            />
+            <Check
+              icon={isAudioActive ? checkmark : webcam}
+              label={"Gadget mic"}
+              iconTop={isAudioActive && mic}
+              labelTop={"Mic"}
+            />
+            <Check
+              icon={isWebcamActive ? checkmark : lighting}
+              label={"Lighting"}
+              iconTop={isWebcamActive && bulb}
+              labelTop={"Bulb"}
+            />
           </div>
         </div>
-        <button className="bg-[#755AE2] text-sm font-medium text-white py-[13px] px-[17px] rounded-[7px]">
+        <button
+          className={`bg-[#755AE2] text-sm font-medium text-white py-[13px] px-[17px] rounded-[7px] ${isDisabled && "opacity-40"}`}
+          onClick={() => setProceed(!proceed)}
+          disabled={isDisabled}
+        >
           Take picture and continue
         </button>
       </div>
+      <Footer />
+      {proceed && <Modal setProceed={setProceed} />}
     </main>
   );
 }
